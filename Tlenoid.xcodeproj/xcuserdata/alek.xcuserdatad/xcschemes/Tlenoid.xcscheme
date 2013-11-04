@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7404CFB91820521D00A465C2"
-               BuildableName = "Tlenoid.bundle"
+               BuildableName = "Tlenoid.imserviceplugin"
                BlueprintName = "Tlenoid"
                ReferencedContainer = "container:Tlenoid.xcodeproj">
             </BuildableReference>

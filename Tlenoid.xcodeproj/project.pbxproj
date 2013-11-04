@@ -7,12 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2DBA1B4ACB1A3D8C8C7473F6 /* TlenConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1A4CE0C816100A13CE42 /* TlenConnection.m */; };
+		2DBA1DD72C5AD86AB43A4924 /* auth.c in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA119C75568B642E7C5951 /* auth.c */; };
 		7404CFBE1820521D00A465C2 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7404CFBD1820521D00A465C2 /* Cocoa.framework */; };
 		7404CFC81820521D00A465C2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7404CFC61820521D00A465C2 /* InfoPlist.strings */; };
+		7404CFD0182052CA00A465C2 /* IMServicePlugIn.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7404CFCF182052CA00A465C2 /* IMServicePlugIn.framework */; };
+		7404CFD31820543600A465C2 /* Tlenoid.m in Sources */ = {isa = PBXBuildFile; fileRef = 7404CFD21820543600A465C2 /* Tlenoid.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7404CFBA1820521D00A465C2 /* Tlenoid.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tlenoid.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DBA119C75568B642E7C5951 /* auth.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = auth.c; sourceTree = "<group>"; };
+		2DBA16530F763DD2192CE9C2 /* auth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = auth.h; sourceTree = "<group>"; };
+		2DBA1A4CE0C816100A13CE42 /* TlenConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TlenConnection.m; sourceTree = "<group>"; };
+		2DBA1AFC767ADA676D85F933 /* TlenConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TlenConnection.h; sourceTree = "<group>"; };
+		7404CFBA1820521D00A465C2 /* Tlenoid.imserviceplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tlenoid.imserviceplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		7404CFBD1820521D00A465C2 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		7404CFC01820521D00A465C2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7404CFC11820521D00A465C2 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -20,6 +28,9 @@
 		7404CFC51820521D00A465C2 /* Tlenoid-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tlenoid-Info.plist"; sourceTree = "<group>"; };
 		7404CFC71820521D00A465C2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7404CFC91820521D00A465C2 /* Tlenoid-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tlenoid-Prefix.pch"; sourceTree = "<group>"; };
+		7404CFCF182052CA00A465C2 /* IMServicePlugIn.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IMServicePlugIn.framework; path = System/Library/Frameworks/IMServicePlugIn.framework; sourceTree = SDKROOT; };
+		7404CFD11820543600A465C2 /* Tlenoid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tlenoid.h; sourceTree = "<group>"; };
+		7404CFD21820543600A465C2 /* Tlenoid.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tlenoid.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7404CFD0182052CA00A465C2 /* IMServicePlugIn.framework in Frameworks */,
 				7404CFBE1820521D00A465C2 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -46,7 +58,7 @@
 		7404CFBB1820521D00A465C2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				7404CFBA1820521D00A465C2 /* Tlenoid.bundle */,
+				7404CFBA1820521D00A465C2 /* Tlenoid.imserviceplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -54,6 +66,7 @@
 		7404CFBC1820521D00A465C2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7404CFCF182052CA00A465C2 /* IMServicePlugIn.framework */,
 				7404CFBD1820521D00A465C2 /* Cocoa.framework */,
 				7404CFBF1820521D00A465C2 /* Other Frameworks */,
 			);
@@ -74,6 +87,12 @@
 			isa = PBXGroup;
 			children = (
 				7404CFC41820521D00A465C2 /* Supporting Files */,
+				7404CFD11820543600A465C2 /* Tlenoid.h */,
+				7404CFD21820543600A465C2 /* Tlenoid.m */,
+				2DBA1A4CE0C816100A13CE42 /* TlenConnection.m */,
+				2DBA1AFC767ADA676D85F933 /* TlenConnection.h */,
+				2DBA119C75568B642E7C5951 /* auth.c */,
+				2DBA16530F763DD2192CE9C2 /* auth.h */,
 			);
 			path = Tlenoid;
 			sourceTree = "<group>";
@@ -105,7 +124,7 @@
 			);
 			name = Tlenoid;
 			productName = Tlenoid;
-			productReference = 7404CFBA1820521D00A465C2 /* Tlenoid.bundle */;
+			productReference = 7404CFBA1820521D00A465C2 /* Tlenoid.imserviceplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -150,6 +169,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7404CFD31820543600A465C2 /* Tlenoid.m in Sources */,
+				2DBA1B4ACB1A3D8C8C7473F6 /* TlenConnection.m in Sources */,
+				2DBA1DD72C5AD86AB43A4924 /* auth.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,9 +264,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tlenoid/Tlenoid-Prefix.pch";
 				INFOPLIST_FILE = "Tlenoid/Tlenoid-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				INSTALL_PATH = "~/Library/iChat/PlugIns/";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = bundle;
+				WRAPPER_EXTENSION = imserviceplugin;
 			};
 			name = Debug;
 		};
@@ -255,9 +277,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Tlenoid/Tlenoid-Prefix.pch";
 				INFOPLIST_FILE = "Tlenoid/Tlenoid-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				INSTALL_PATH = "~/Library/iChat/PlugIns/";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = bundle;
+				WRAPPER_EXTENSION = imserviceplugin;
 			};
 			name = Release;
 		};
@@ -280,6 +302,7 @@
 				7404CFCE1820521D00A465C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
