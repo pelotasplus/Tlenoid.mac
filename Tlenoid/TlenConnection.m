@@ -52,12 +52,12 @@
 }
 
 - (void)write:(NSString *)data {
-    int len = data.length;
+    unsigned long len = data.length;
     const char *c = [data UTF8String];
 
     NSLog(@"write: %s (length %lu)", c, len);
 
-    [outputStream write:c maxLength:len];
+    [outputStream write:(uint8_t const *) c maxLength:len];
 }
 
 - (void)login:(NSString *)_username password:(NSString *)_password {
