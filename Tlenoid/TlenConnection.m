@@ -4,6 +4,7 @@
 //
 
 #import <Foundation/NSXMLElement.h>
+#import <IMServicePlugIn/IMServicePlugIn.h>
 
 #import "TlenConnection.h"
 #import "auth.h"
@@ -15,6 +16,11 @@
     }
 
     return self;
+}
+
+- (NSString *) urldecode:(NSString *)encoded {
+    NSString *decoded = (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (__bridge CFStringRef)encoded, CFSTR(""), NSUTF8StringEncoding);
+    return decoded;
 }
 
 - (void) setDelegate:(id<TlenConnectionDelegate>)delegate
@@ -173,19 +179,47 @@
 
     if (id == NULL) {
         // pass
+    // logged in
     } else if ([[id stringValue] isEqualToString:sessionId]) {
         BOOL success = (type != NULL) && [[type stringValue] isEqualToString:@"result"];
         [_delegate connection:self loggedIn:success];
+    // got roster
     } else if ([[id stringValue] isEqualToString:@"GetRoster"] &&
             type != NULL &&
             [[type stringValue] isEqualToString:@"result"]) {
         NSXMLNode *query = [root childAtIndex:0];
         if (query == NULL) return;
-        for (NSXMLNode *buddy in [query children]) {
-            if (! [[buddy name] isEqualToString:@"item"])
+
+//        IMGroupListPermissions allGroupPermissions = IMGroupListCanReorderGroup | IMGroupListCanRenameGroup | IMGroupListCanAddNewMembers | IMGroupListCanRemoveMembers | IMGroupListCanReorderMembers;
+//        NSArray *groups = [NSArray arrayWithObjects:
+//                [NSDictionary dictionaryWithObjectsAndKeys:
+//                        IMGroupListNameKey, IMGroupListDefaultGroup, IMGroupListPermissionsKey,
+//                        [NSNumber numberWithUnsignedInteger:IMGroupListCanAddNewMembers],
+//                        IMGroupListHandlesKey, [self usersForGroup:nil],
+//                        nil],
+        NSMutableArray *buddies = [[NSMutableArray alloc] init];
+
+        for (NSXMLNode *child in [query children]) {
+            if (! [[child name] isEqualToString:@"item"])
                 continue;
+            NSXMLElement *buddy = (NSXMLElement *) child;
             NSLog(@"buddy %@", buddy);
+
+            NSString *jid = [[buddy attributeForName:@"jid"] objectValue];
+            NSString *name = [[buddy attributeForName:@"name"] objectValue];
+            if (name == NULL) name = jid;
+            NSString *subscription = [[buddy attributeForName:@"subscription"] objectValue];
+
+            NSMutableDictionary *b = [[NSMutableDictionary alloc] init];
+            [b setObject:jid forKey:@"jid"];
+            [b setObject:[self urldecode:name] forKey:@"name"];
+            [b setObject:subscription forKey:@"subscription"];
+
+            NSLog(@"b %@", b);
+            [buddies addObject:b];
         }
+
+        [_delegate connection:self gotRoster:buddies];
     }
 }
 

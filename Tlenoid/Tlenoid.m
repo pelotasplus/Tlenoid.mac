@@ -12,12 +12,13 @@
 
 // IMServicePlugIn
 
-- (id)initWithServiceApplication:(id <IMServiceApplication>)serviceApplication {
+- (id)initWithServiceApplication:(id <IMServiceApplication, IMServiceApplicationGroupListSupport>)serviceApplication {
     NSLog(@"initWithServiceApplication");
 
     if ((self = [super init])) {
         _application = serviceApplication;
         _tlenConnection = [[TlenConnection alloc] initWithDelegate:self];
+        _users = [[NSMutableArray alloc] init];
     }
 
     return self;
@@ -48,24 +49,43 @@
     NSLog(@"logout end");
 }
 
+// IMServicePlugInPresenceSupport
+
 - (oneway void)updateSessionProperties:(NSDictionary *)properties {
     NSLog(@"updateSessionProperties: properties=%@", properties);
 }
 
+// IMServicePlugInGroupListSupport
+
 - (oneway void) requestGroupList {
     NSLog(@"requestGroupList");
 
-    NSMutableDictionary *grp = [NSMutableDictionary dictionary];
-    [grp setObject:@"Campfire" forKey:IMGroupListNameKey];
-    NSArray *handles = [NSArray alloc];
-    [grp setObject:handles forKey:IMGroupListHandlesKey];
-
-    NSDictionary *group = grp;
-    [_application plugInDidUpdateGroupList:[NSArray arrayWithObject:group] error:nil];
-
     [_tlenConnection requestGroupList];
-    // No real buddy list support, just send back the list containing the console user
-//    [self _sendBuddyList];
+
+//    NSMutableDictionary *grp = [NSMutableDictionary dictionary];
+//    [grp setObject:@"Campfire" forKey:IMGroupListNameKey];
+//    NSArray *handles = [NSArray alloc];
+//    [grp setObject:handles forKey:IMGroupListHandlesKey];
+//
+//    NSDictionary *group = grp;
+//    [_application plugInDidUpdateGroupList:[NSArray arrayWithObject:group] error:nil];
+//
+//    // No real buddy list support, just send back the list containing the console user
+////    [self _sendBuddyList];
+}
+
+// IMServicePlugInInstantMessagingSupport
+
+- (oneway void)userDidStartTypingToHandle:(NSString *)handle {
+
+}
+
+- (oneway void)userDidStopTypingToHandle:(NSString *)handle {
+
+}
+
+- (oneway void)sendMessage:(IMServicePlugInMessage *)message toHandle:(NSString *)handle {
+
 }
 
 // TlenConnectionDelegate
@@ -82,16 +102,25 @@
     // pass
 }
 
-- (oneway void)userDidStartTypingToHandle:(NSString *)handle {
+- (void)connection:(TlenConnection *)connection gotRoster:(NSArray *)users {
+    NSLog(@"gotRoster %@", users);
+    _users = [[NSMutableArray alloc] initWithArray:users];
 
-}
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
 
-- (oneway void)userDidStopTypingToHandle:(NSString *)handle {
+    // IMGroupListHandlesKey
+    [dict setObject:@"Tlenoid" forKey:IMGroupListNameKey];
 
-}
+    // IMGroupListHandlesKey
+    NSMutableArray *handles = [[NSMutableArray alloc] init];
+    for (NSDictionary *user in _users) {
+        [handles addObject:[user objectForKey:@"jid"]];
+    }
+    [dict setObject:handles forKey:IMGroupListHandlesKey];
 
-- (oneway void)sendMessage:(IMServicePlugInMessage *)message toHandle:(NSString *)handle {
+    NSLog(@"dict %@", dict);
 
+    [_application plugInDidUpdateGroupList:[NSArray arrayWithObject:dict] error:nil];
 }
 
 @end

@@ -26,5 +26,13 @@
 	<string>Copyright © 2013 pelotasplus Aleksander Piotrowski. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
 	<string></string>
+    <key>IMServiceCapabilities</key>
+    <array>
+        <string>IMServiceCapabilityPresenceSupport</string>
+        <string>IMServiceCapabilityPresenceInvisibilitySupport</string>
+        <string>IMServiceCapabilityInstantMessagingSupport</string>
+        <string>IMServiceCapabilityGroupListSupport</string>
+        <string>IMServiceCapabilityGroupListEditingSupport</string>
+    </array>
 </dict>
 </plist>
