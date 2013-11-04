@@ -32,7 +32,7 @@
         <string>IMServiceCapabilityPresenceInvisibilitySupport</string>
         <string>IMServiceCapabilityInstantMessagingSupport</string>
         <string>IMServiceCapabilityGroupListSupport</string>
-        <string>IMServiceCapabilityGroupListEditingSupport</string>
+        <!--<string>IMServiceCapabilityGroupListEditingSupport</string>-->
     </array>
 </dict>
 </plist>

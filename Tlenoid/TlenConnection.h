@@ -17,6 +17,8 @@
 
     NSString *sessionId, *username, *password;
     NSXMLElement *currentElement, *root;
+
+    NSDictionary *sessionProperties;
 }
 
 - (id) initWithDelegate:(id<TlenConnectionDelegate>)delegate;
@@ -28,6 +30,8 @@
 - (void)destroy;
 
 - (void)requestGroupList;
+
+- (void)updateSessionProperties:(NSDictionary *)dictionary;
 @end
 
 @protocol TlenConnectionDelegate

@@ -53,6 +53,8 @@
 
 - (oneway void)updateSessionProperties:(NSDictionary *)properties {
     NSLog(@"updateSessionProperties: properties=%@", properties);
+
+    [_tlenConnection updateSessionProperties:properties];
 }
 
 // IMServicePlugInGroupListSupport
@@ -61,17 +63,6 @@
     NSLog(@"requestGroupList");
 
     [_tlenConnection requestGroupList];
-
-//    NSMutableDictionary *grp = [NSMutableDictionary dictionary];
-//    [grp setObject:@"Campfire" forKey:IMGroupListNameKey];
-//    NSArray *handles = [NSArray alloc];
-//    [grp setObject:handles forKey:IMGroupListHandlesKey];
-//
-//    NSDictionary *group = grp;
-//    [_application plugInDidUpdateGroupList:[NSArray arrayWithObject:group] error:nil];
-//
-//    // No real buddy list support, just send back the list containing the console user
-////    [self _sendBuddyList];
 }
 
 // IMServicePlugInInstantMessagingSupport

@@ -13,6 +13,7 @@
 
 @interface Tlenoid : NSObject<
     IMServicePlugIn,
+    IMServicePlugInPresenceSupport,
     IMServicePlugInGroupListSupport,
     TlenConnectionDelegate>
 {

@@ -203,7 +203,7 @@
             if (! [[child name] isEqualToString:@"item"])
                 continue;
             NSXMLElement *buddy = (NSXMLElement *) child;
-            NSLog(@"buddy %@", buddy);
+//            NSLog(@"buddy %@", buddy);
 
             NSString *jid = [[buddy attributeForName:@"jid"] objectValue];
             NSString *name = [[buddy attributeForName:@"name"] objectValue];
@@ -215,12 +215,50 @@
             [b setObject:[self urldecode:name] forKey:@"name"];
             [b setObject:subscription forKey:@"subscription"];
 
-            NSLog(@"b %@", b);
+//            NSLog(@"b %@", b);
             [buddies addObject:b];
         }
 
         [_delegate connection:self gotRoster:buddies];
+
+        // set presence
+        [self setPresence];
     }
+}
+
+- (const char *)IMSessionAvailability2TlenPresence:(IMSessionAvailability)presence {
+    if (presence == IMSessionAvailabilityAway) {
+        return "away";
+    } else {
+        return "available";
+    }
+}
+
+- (void)setPresence {
+    NSString *s;
+
+    NSNumber *isInvisible = [sessionProperties objectForKey:IMSessionPropertyIsInvisible];
+    IMSessionAvailability availability = (IMSessionAvailability) [[sessionProperties objectForKey:IMSessionPropertyAvailability] intValue];
+    NSString *description = [sessionProperties objectForKey:IMSessionPropertyStatusMessage];
+
+    NSLog(@"setPresence isInvisible %d", [isInvisible boolValue]);
+    NSLog(@"setPresence availability %d", availability);
+
+    if ([isInvisible boolValue]) {
+        s = @"<presence type='invisible'></presence>";
+    } else if (description != NULL) {
+        s = [NSString
+                stringWithFormat:@"<presence><show>%s</show><status>%s</status></presence>",
+                [self IMSessionAvailability2TlenPresence:availability],
+                [description UTF8String]
+        ];
+    } else {
+        s = [NSString stringWithFormat:@"<presence><show>%s</show></presence>", [self IMSessionAvailability2TlenPresence:availability]];
+    }
+
+    NSLog(@"setPresence %@", s);
+
+    [self write:s];
 }
 
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
@@ -251,6 +289,11 @@
 - (void)requestGroupList {
     NSString *s = @"<iq type='get' id='GetRoster'><query xmlns='jabber:iq:roster'></query></iq>";
     [self write:s];
+}
+
+- (void)updateSessionProperties:(NSDictionary *)dictionary {
+    sessionProperties = dictionary;
+    [self setPresence];
 }
 
 @end
