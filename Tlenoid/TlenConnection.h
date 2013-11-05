@@ -37,10 +37,9 @@
 @end
 
 @protocol TlenConnectionDelegate
-
-- (void) connection:(TlenConnection *)connection loggedIn:(BOOL)success;
-- (void) connection:(TlenConnection *)connection loggedOut:(BOOL)success;
-- (void) connection:(TlenConnection *)connection gotRoster:(NSArray *)users;
-- (void) connection:(TlenConnection *)connection gotPresence:(NSDictionary *)presence;
-
+- (void)connection:(TlenConnection *)connection loggedIn:(BOOL)success;
+- (void)connection:(TlenConnection *)connection loggedOut:(BOOL)success;
+- (void)connection:(TlenConnection *)connection gotRoster:(NSArray *)users;
+- (void)connection:(TlenConnection *)connection gotPresence:(NSDictionary *)presence;
+- (void)connection:(TlenConnection *)connection parseError:(NSError *)error;
 @end

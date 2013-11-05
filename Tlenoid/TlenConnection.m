@@ -356,6 +356,8 @@
 
 - (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
     NSLog(@"Error %ld, Description: %@, Line: %ld, Column: %ld", [parseError code], [[parser parserError] localizedDescription], [parser lineNumber], [parser columnNumber]);
+
+    [_delegate connection:self parseError:parseError];
 }
 
 - (void)stream:(NSStream *)stream handleEvent:(NSStreamEvent)eventCode {

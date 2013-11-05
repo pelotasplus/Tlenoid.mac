@@ -131,4 +131,8 @@
     [_application plugInDidUpdateProperties:presence ofHandle:jid];
 }
 
+- (void)connection:(TlenConnection *)connection parseError:(NSError *)error {
+    [_application plugInDidLogOutWithError:error reconnect:TRUE];
+}
+
 @end
