@@ -20,7 +20,9 @@
 }
 
 - (NSString *) urldecode:(NSString *)encoded {
-    NSString *decoded = (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (__bridge CFStringRef)encoded, CFSTR(""), NSUTF8StringEncoding);
+    NSString *decoded = [[encoded
+            stringByReplacingOccurrencesOfString:@"+" withString:@" "]
+            stringByReplacingPercentEscapesUsingEncoding:NSISOLatin2StringEncoding];
     return decoded;
 }
 
