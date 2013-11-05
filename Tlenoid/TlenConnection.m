@@ -13,6 +13,7 @@
 - (id) initWithDelegate:(id<TlenConnectionDelegate>)delegate {
     if ((self = [super init])) {
         [self setDelegate:delegate];
+        gotRoster = FALSE;
     }
 
     return self;
@@ -219,6 +220,7 @@
             [buddies addObject:b];
         }
 
+        gotRoster = TRUE;
         [_delegate connection:self gotRoster:buddies];
 
         // set presence
@@ -235,6 +237,11 @@
 }
 
 - (void)setPresence {
+    if (! gotRoster) {
+        NSLog(@"setPresence skipping");
+        return;
+    }
+
     NSString *s;
 
     NSNumber *isInvisible = [sessionProperties objectForKey:IMSessionPropertyIsInvisible];

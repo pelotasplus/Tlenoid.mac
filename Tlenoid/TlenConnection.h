@@ -18,6 +18,8 @@
     NSString *sessionId, *username, *password;
     NSXMLElement *currentElement, *root;
 
+    // set our presence not before receiving roster
+    BOOL gotRoster;
     NSDictionary *sessionProperties;
 }
 
