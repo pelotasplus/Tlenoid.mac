@@ -84,7 +84,7 @@
         namespaceURI:(NSString *)namespaceURI
         qualifiedName:(NSString *)qName
         attributes:(NSDictionary *)attributeDict {
-    NSLog(@"didStartElement: %@, attributeDict: %@", elementName, attributeDict);
+//    NSLog(@"didStartElement: %@, attributeDict: %@", elementName, attributeDict);
 
     NSXMLElement *element = [[NSXMLElement alloc] initWithName:elementName];
     for(id key in attributeDict) {
@@ -97,7 +97,6 @@
     if ([elementName isEqualToString:@"s"]) {
         sessionId = [attributeDict objectForKey:@"i"];
         char *hash = tlen_hash([password UTF8String], [sessionId UTF8String]);
-        NSLog(@"sessionId %@ hash %s", sessionId, hash);
 
         NSString *s = [NSString
                 stringWithFormat:@"<iq type='set' id='%s'><query xmlns='jabber:iq:auth'><username>%s</username><host>tlen.pl</host><digest>%s</digest><resource>t</resource></query></iq>\n",
@@ -117,7 +116,7 @@
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-    NSLog(@"foundCharacters: %@", string);
+//    NSLog(@"foundCharacters: %@", string);
 
 //    assert(currentElement != NULL);
 
@@ -128,9 +127,7 @@
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-    NSLog(@"didEndElement: %@", elementName);
-
-    NSLog(@"currentElement %@", currentElement);
+//    NSLog(@"didEndElement: %@", elementName);
 
     // special case, ending <s> tag
     if ([elementName isEqualToString:@"s"] && currentElement == NULL) {
@@ -141,16 +138,12 @@
     assert(currentElement != NULL);
 
     if ([root.name isEqualToString:elementName]) {
-        NSLog(@"processing action %@", root);
         [self processResponse];
         root = NULL;
         currentElement = NULL;
     } else if ([currentElement.name isEqualToString:elementName]) {
         currentElement = (NSXMLElement *) [currentElement parent];
     }
-
-    NSLog(@"root %@", root);
-    NSLog(@"after currentElement %@", currentElement);
 }
 
 - (void)processResponse {
@@ -193,13 +186,6 @@
         NSXMLNode *query = [root childAtIndex:0];
         if (query == NULL) return;
 
-//        IMGroupListPermissions allGroupPermissions = IMGroupListCanReorderGroup | IMGroupListCanRenameGroup | IMGroupListCanAddNewMembers | IMGroupListCanRemoveMembers | IMGroupListCanReorderMembers;
-//        NSArray *groups = [NSArray arrayWithObjects:
-//                [NSDictionary dictionaryWithObjectsAndKeys:
-//                        IMGroupListNameKey, IMGroupListDefaultGroup, IMGroupListPermissionsKey,
-//                        [NSNumber numberWithUnsignedInteger:IMGroupListCanAddNewMembers],
-//                        IMGroupListHandlesKey, [self usersForGroup:nil],
-//                        nil],
         NSMutableArray *buddies = [[NSMutableArray alloc] init];
 
         for (NSXMLNode *child in [query children]) {
@@ -249,9 +235,6 @@
     NSNumber *isInvisible = [sessionProperties objectForKey:IMSessionPropertyIsInvisible];
     IMSessionAvailability availability = (IMSessionAvailability) [[sessionProperties objectForKey:IMSessionPropertyAvailability] intValue];
     NSString *description = [sessionProperties objectForKey:IMSessionPropertyStatusMessage];
-
-    NSLog(@"setPresence isInvisible %d", [isInvisible boolValue]);
-    NSLog(@"setPresence availability %d", availability);
 
     if ([isInvisible boolValue]) {
         s = @"<presence type='invisible'></presence>";
