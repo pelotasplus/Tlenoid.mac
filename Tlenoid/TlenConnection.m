@@ -155,9 +155,64 @@
 
     if ([s isEqualToString:@"iq"]) {
         [self processIq];
+    } else if ([s isEqualToString:@"presence"]) {
+        [self processPresence];
     } else {
-        NSLog(@"unknown XML");
+        NSLog(@"unknown XML %@", s);
     }
+}
+
+- (void)processPresence {
+    assert([root.name isEqualToString:@"presence"]);
+
+    NSString *status = @"", *show = @"unavailable";
+
+    NSXMLNode *from = [[root attributeForName:@"from"] objectValue];
+    NSXMLNode *type = [[root attributeForName:@"type"] objectValue];
+
+    NSLog(@"type from %@ %@", from, type);
+
+    if (type != NULL) {
+        show = (id) type;
+    }
+
+    NSLog(@"type2 from %@ %@", from, type);
+
+    for (NSXMLNode *child in [root children]) {
+        NSLog(@"processing child from %@ %@", from, child);
+        if ([child.name isEqualToString:@"show"]) {
+            show = [child objectValue];
+        } else if ([child.name isEqualToString:@"status"]) {
+            NSLog(@"status pre %@ %@", from, [child objectValue]);
+            status = [self urldecode:[child objectValue]];
+            NSLog(@"status after %@ %@", from, status);
+//            status = [child objectValue];
+        }
+    }
+
+    NSLog(@"show %@", show);
+
+    if (status == NULL) status = @"";
+    if (show == NULL) show = @"unavailable";
+
+    NSLog(@"processPresence: from=%@ status=%@ show=%@", from, status, show);
+
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+
+    // IMHandlePropertyStatusMessage
+    [dictionary setObject:status forKey:IMHandlePropertyStatusMessage];
+
+
+    // IMHandlePropertyAvailability
+    IMHandleAvailability availability = [self TlenPresence2IMHandleAvailability:show];
+    [dictionary setObject:[NSNumber numberWithInteger:availability] forKey:IMHandlePropertyAvailability];
+
+    // handle
+    [dictionary setObject:from forKey:@"jid"];
+
+    NSLog(@"processPresence: dict %@", dictionary);
+
+    [_delegate connection:self gotPresence:dictionary];
 }
 
 - (void)processIq {
@@ -204,7 +259,29 @@
             [b setObject:[self urldecode:name] forKey:@"name"];
             [b setObject:subscription forKey:@"subscription"];
 
-//            NSLog(@"b %@", b);
+            // IMHandlePropertyEmailAddress
+            [b setObject:jid forKey:IMHandlePropertyEmailAddress];
+
+            // IMHandlePropertyAlias
+            [b setObject:[self urldecode:name] forKey:IMHandlePropertyAlias];
+
+            // IMHandlePropertyAuthorizationStatus
+            IMHandleAuthorizationStatus authorizationStatus = [self TlenSubscription2IMHandleAuthorizationStatus:subscription];
+            [b setObject:[NSNumber numberWithInteger:authorizationStatus] forKey:IMHandlePropertyAuthorizationStatus];
+
+            // IMHandlePropertyAvailability
+            // IMHandlePropertyStatusMessage
+            // IMHandlePropertyIdleDate
+            //
+            // IMHandlePropertyFirstName
+            // IMHandlePropertyLastName
+            // IMHandlePropertyPictureIdentifier
+            // IMHandlePropertyPictureData
+
+            // IMHandlePropertyCapabilities
+            NSArray *caps = [[NSArray alloc] initWithObjects:IMHandleCapabilityMessaging, IMHandleCapabilityOfflineMessaging, nil];
+            [b setObject:caps forKey:IMHandlePropertyCapabilities];
+
             [buddies addObject:b];
         }
 
@@ -221,6 +298,30 @@
         return "away";
     } else {
         return "available";
+    }
+}
+
+- (IMHandleAvailability)TlenPresence2IMHandleAvailability:(NSString *)presence {
+    NSLog(@"TlenPresence2IMHandleAvailability %@", presence);
+
+    if ([presence isEqualToString:@"available"]) {
+        return IMHandleAvailabilityAvailable;
+    } else if ([presence isEqualToString:@"chatty"]) {
+        return IMHandleAvailabilityAvailable;
+    } else if ([presence isEqualToString:@"away"]) {
+        return IMHandleAvailabilityAway;
+    } else if ([presence isEqualToString:@"xa"]) {
+        return IMHandleAvailabilityAway;
+    } else {
+        return IMHandleAvailabilityUnknown;
+    }
+}
+
+- (IMHandleAuthorizationStatus)TlenSubscription2IMHandleAuthorizationStatus:(NSString *)subscription {
+    if ([subscription isEqualToString:@"both"]) {
+        return IMHandleAuthorizationStatusAccepted;
+    } else {
+        return IMHandleAuthorizationStatusDeclined;
     }
 }
 

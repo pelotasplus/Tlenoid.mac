@@ -41,5 +41,6 @@
 - (void) connection:(TlenConnection *)connection loggedIn:(BOOL)success;
 - (void) connection:(TlenConnection *)connection loggedOut:(BOOL)success;
 - (void) connection:(TlenConnection *)connection gotRoster:(NSArray *)users;
+- (void) connection:(TlenConnection *)connection gotPresence:(NSDictionary *)presence;
 
 @end

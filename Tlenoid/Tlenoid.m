@@ -95,23 +95,40 @@
 
 - (void)connection:(TlenConnection *)connection gotRoster:(NSArray *)users {
     NSLog(@"gotRoster %@", users);
+
     _users = [[NSMutableArray alloc] initWithArray:users];
 
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    // permissions
+    NSNumber *permissions = [[NSNumber alloc] initWithInt:IMGroupListCanReorderGroup];
 
-    // IMGroupListHandlesKey
-    [dict setObject:@"Tlenoid" forKey:IMGroupListNameKey];
-
-    // IMGroupListHandlesKey
+    // handles
     NSMutableArray *handles = [[NSMutableArray alloc] init];
     for (NSDictionary *user in _users) {
         [handles addObject:[user objectForKey:@"jid"]];
     }
-    [dict setObject:handles forKey:IMGroupListHandlesKey];
 
-    NSLog(@"dict %@", dict);
+    NSDictionary *defaultGroup = [[NSDictionary alloc] initWithObjectsAndKeys:
+        IMGroupListDefaultGroup, IMGroupListNameKey,
+        handles, IMGroupListHandlesKey,
+        permissions, IMGroupListPermissionsKey,
+        nil];
 
-    [_application plugInDidUpdateGroupList:[NSArray arrayWithObject:dict] error:nil];
+    NSLog(@"default group %@", defaultGroup);
+
+    NSArray *groups = [[NSArray alloc] initWithObjects:defaultGroup, nil];
+
+    [_application plugInDidUpdateGroupList:groups error:nil];
+
+    for (NSDictionary *user in _users) {
+        [_application plugInDidUpdateProperties:user ofHandle:[user objectForKey:@"jid"]];
+    }
+}
+
+- (void)connection:(TlenConnection *)connection gotPresence:(NSDictionary *)presence {
+    NSString *jid = [presence valueForKey:@"jid"];
+    NSLog(@"got presence: jid %@", jid);
+    NSLog(@"got presence: presence %@", presence);
+    [_application plugInDidUpdateProperties:presence ofHandle:jid];
 }
 
 @end
