@@ -12,8 +12,8 @@
 
     NSInputStream *inputStream;
     NSOutputStream *outputStream;
-    NSMutableData *receivedData;
     NSXMLParser *xmlParser;
+    NSTimer *pingTimer;
 
     NSString *sessionId, *username, *password;
     NSXMLElement *currentElement, *root;

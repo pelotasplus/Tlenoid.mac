@@ -77,6 +77,34 @@
 
     NSString *s = @"<s v='7'>\n";
     [self write:s];
+
+    [self startPingTimer];
+
+}
+
+- (void)startPingTimer {
+    if (pingTimer != NULL) {
+        [self stopPingTimer];
+    }
+    pingTimer = [NSTimer scheduledTimerWithTimeInterval:(6.0)
+                                                 target:self
+                                               selector:@selector(pingTimerFired:)
+                                               userInfo:nil
+                                                repeats:YES];
+
+}
+
+- (void)pingTimerFired:(id)pingTimerFired {
+    NSLog(@"pingTimerFired");
+    NSString *s = @"  \t  ";
+    [self write:s];
+}
+
+- (void)stopPingTimer {
+    if (pingTimer != NULL) {
+        [pingTimer invalidate];
+        pingTimer = nil;
+    }
 }
 
 - (void)parser:(NSXMLParser *)parser
@@ -376,6 +404,7 @@
 - (void)logout {
     NSString *s = @"</s>";
     [self write:s];
+    [self stopPingTimer];
 }
 
 - (void)destroy {
