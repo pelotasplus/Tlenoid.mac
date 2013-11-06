@@ -312,6 +312,8 @@
         return IMHandleAvailabilityAway;
     } else if ([presence isEqualToString:@"xa"]) {
         return IMHandleAvailabilityAway;
+    } else if ([presence isEqualToString:@"dnd"]) {
+        return IMHandleAvailabilityAway;
     } else {
         return IMHandleAvailabilityUnknown;
     }
