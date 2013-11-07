@@ -185,8 +185,34 @@
         [self processIq];
     } else if ([s isEqualToString:@"presence"]) {
         [self processPresence];
+    } else if ([s isEqualToString:@"message"]) {
+        [self processMessage];
     } else {
         NSLog(@"unknown XML %@", s);
+    }
+}
+
+- (void)processMessage {
+    NSLog(@"processMessage: root=%@", root);
+
+    NSXMLNode *type = [[root attributeForName:@"type"] objectValue];
+    NSXMLNode *jid = [[root attributeForName:@"from"] objectValue];
+
+    NSString *body;
+    for (NSXMLNode *child in [root children]) {
+        if ([[child name] isEqualToString:@"body"]) {
+            body = [child objectValue];
+            body = [self urldecode:body];
+            break;
+        }
+    }
+
+    if (type && jid && body) {
+        NSLog(@"type %@", type);
+        NSLog(@"from %@", jid);
+        NSLog(@"body %@", body);
+
+        [_delegate connection:self gotMessage:body from:@"pelotas@tlen.pl"];
     }
 }
 
@@ -420,6 +446,15 @@
 - (void)updateSessionProperties:(NSDictionary *)dictionary {
     sessionProperties = dictionary;
     [self setPresence];
+}
+
+- (void)sendMessage:(IMServicePlugInMessage *)message toHandle:(NSString *)jid {
+    NSLog(@"sendMessage: %@ jid %@", message, jid);
+
+    NSString *s = [NSString stringWithFormat:@"<message to='%@' type='chat'><body>%@</body></message>", jid, [message.content string]];
+    [self write:s];
+
+    [_delegate connection:self messageSent:message from:jid];
 }
 
 @end

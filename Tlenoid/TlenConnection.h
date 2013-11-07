@@ -34,6 +34,8 @@
 - (void)requestGroupList;
 
 - (void)updateSessionProperties:(NSDictionary *)dictionary;
+
+- (void)sendMessage:(IMServicePlugInMessage *)message toHandle:(NSString *)handle;
 @end
 
 @protocol TlenConnectionDelegate
@@ -41,5 +43,7 @@
 - (void)connection:(TlenConnection *)connection loggedOut:(BOOL)success;
 - (void)connection:(TlenConnection *)connection gotRoster:(NSArray *)users;
 - (void)connection:(TlenConnection *)connection gotPresence:(NSDictionary *)presence;
+- (void)connection:(TlenConnection *)connection gotMessage:(NSString *)message from:(NSString *)jid;
+- (void)connection:(TlenConnection *)connection messageSent:(IMServicePlugInMessage *)message from:(NSString *)jid;
 - (void)connection:(TlenConnection *)connection parseError:(NSError *)error;
 @end

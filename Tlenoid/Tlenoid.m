@@ -76,7 +76,8 @@
 }
 
 - (oneway void)sendMessage:(IMServicePlugInMessage *)message toHandle:(NSString *)handle {
-
+    NSLog(@"sendMessage");
+    [_tlenConnection sendMessage:message toHandle:handle];
 }
 
 // TlenConnectionDelegate
@@ -134,5 +135,15 @@
 - (void)connection:(TlenConnection *)connection parseError:(NSError *)error {
     [_application plugInDidLogOutWithError:error reconnect:TRUE];
 }
+
+- (void)connection:(TlenConnection *)connection gotMessage:(NSString *)message from:(NSString *)from {
+    IMServicePlugInMessage *m = [[IMServicePlugInMessage alloc] initWithContent:[[NSAttributedString alloc] initWithString:message]];
+    [_application plugInDidReceiveMessage:m fromHandle:from];
+}
+
+- (void)connection:(TlenConnection *)connection messageSent:(IMServicePlugInMessage *)message from:(NSString *)jid {
+    [_application plugInDidSendMessage:message toHandle:jid error:nil];
+}
+
 
 @end
