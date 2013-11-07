@@ -334,7 +334,7 @@
 
     if ([presence isEqualToString:@"available"]) {
         return IMHandleAvailabilityAvailable;
-    } else if ([presence isEqualToString:@"chatty"]) {
+    } else if ([presence isEqualToString:@"chat"]) {
         return IMHandleAvailabilityAvailable;
     } else if ([presence isEqualToString:@"away"]) {
         return IMHandleAvailabilityAway;
