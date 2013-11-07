@@ -407,10 +407,10 @@
     [self stopPingTimer];
 }
 
-- (void)destroy {
-    [inputStream close];
-    [outputStream close];
-}
+//- (void)destroy {
+//    [inputStream close];
+//    [outputStream close];
+//}
 
 - (void)requestGroupList {
     NSString *s = @"<iq type='get' id='GetRoster'><query xmlns='jabber:iq:roster'></query></iq>";

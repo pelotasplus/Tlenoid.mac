@@ -29,7 +29,7 @@
 - (void)write:(NSString *)data;
 - (void)login:(NSString *)username password:(NSString *)password;
 - (void)logout;
-- (void)destroy;
+//- (void)destroy;
 
 - (void)requestGroupList;
 
