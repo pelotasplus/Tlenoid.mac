@@ -67,12 +67,17 @@
 
 // IMServicePlugInInstantMessagingSupport
 
-- (oneway void)userDidStartTypingToHandle:(NSString *)handle {
+#pragma mark -
+#pragma mark IMServicePlugInInstantMessagingSupport
 
+- (oneway void)userDidStartTypingToHandle:(NSString *)handle {
+    NSLog(@"userDidStartTypingToHandle: handle=%@", handle);
+    [_tlenConnection startedTyping:handle];
 }
 
 - (oneway void)userDidStopTypingToHandle:(NSString *)handle {
-
+    NSLog(@"userDidStopTypingToHandle: handle=%@", handle);
+    [_tlenConnection stopedTyping:handle];
 }
 
 - (oneway void)sendMessage:(IMServicePlugInMessage *)message toHandle:(NSString *)handle {
@@ -143,6 +148,16 @@
 
 - (void)connection:(TlenConnection *)connection messageSent:(IMServicePlugInMessage *)message from:(NSString *)jid {
     [_application plugInDidSendMessage:message toHandle:jid error:nil];
+}
+
+- (void)connection:(TlenConnection *)connection gotTyping:(NSString *)jid startedTyping:(BOOL)started {
+    NSLog(@"gotTyping: jid=%@ started=%d", jid, started);
+
+    if (started) {
+        [_application handleDidStartTyping:jid];
+    } else {
+        [_application handleDidStopTyping:jid];
+    }
 }
 
 @end

@@ -194,9 +194,47 @@
         [self processPresence];
     } else if ([s isEqualToString:@"message"]) {
         [self processMessage];
+    } else if ([s isEqualToString:@"m"]) {
+        [self processM];
     } else {
         NSLog(@"unknown XML %@", s);
     }
+}
+
+- (void)processM {
+    NSLog(@"processM: root=%@", root);
+
+    NSXMLNode *f, *tp;
+
+    f = [root attributeForName:@"f"];
+    tp = [root attributeForName:@"tp"];
+
+    NSLog(@"processM f=%@ tp=%@", f, tp);
+
+    if (! f || ! tp) {
+        return;
+    }
+
+    NSLog(@"processM f=%@ tp=%@", [f objectValue], [tp stringValue]);
+
+    NSLog(@"processM %d", [[tp objectValue] isEqualToString:@"t"]);
+    NSLog(@"processM %d", [[tp stringValue] isEqualTo:@"t"]);
+
+    BOOL startedTyping;
+
+    if ([[tp objectValue] isEqualToString:@"t"]) {
+        startedTyping = TRUE;
+    } else if ([[tp objectValue] isEqualToString:@"u"]) {
+        startedTyping = FALSE;
+    } else {
+        NSLog(@"unknown tp");
+        return;
+    }
+
+    NSString *jid = [f stringValue];
+    jid = [jid stringByReplacingOccurrencesOfString:@"/WebTlen" withString:@""];
+
+    [_delegate connection:self gotTyping:jid startedTyping:startedTyping];
 }
 
 - (void)processMessage {
@@ -464,6 +502,16 @@
     [self write:s];
 
     [_delegate connection:self messageSent:message from:jid];
+}
+
+- (void)startedTyping:(NSString *)handle {
+    NSString *s = [NSString stringWithFormat:@"<m to='%@' tp='t'/>", handle];
+    [self write:s];
+}
+
+- (void)stopedTyping:(NSString *)handle {
+    NSString *s = [NSString stringWithFormat:@"<m to='%@' tp='u'/>", handle];
+    [self write:s];
 }
 
 @end
