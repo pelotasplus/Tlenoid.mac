@@ -145,5 +145,4 @@
     [_application plugInDidSendMessage:message toHandle:jid error:nil];
 }
 
-
 @end

@@ -26,6 +26,13 @@
     return decoded;
 }
 
+- (NSString *) urlencode:(NSString *)string {
+    NSString *encoded = [[string
+            stringByReplacingOccurrencesOfString:@" " withString:@"+"]
+            stringByAddingPercentEscapesUsingEncoding:NSISOLatin2StringEncoding];
+    return encoded;
+}
+
 - (void) setDelegate:(id<TlenConnectionDelegate>)delegate
 {
     _delegate = delegate;
@@ -451,7 +458,9 @@
 - (void)sendMessage:(IMServicePlugInMessage *)message toHandle:(NSString *)jid {
     NSLog(@"sendMessage: %@ jid %@", message, jid);
 
-    NSString *s = [NSString stringWithFormat:@"<message to='%@' type='chat'><body>%@</body></message>", jid, [message.content string]];
+    NSString *msg = [self urlencode:[message.content string]];
+
+    NSString *s = [NSString stringWithFormat:@"<message to='%@' type='chat'><body>%@</body></message>", jid, msg];
     [self write:s];
 
     [_delegate connection:self messageSent:message from:jid];
