@@ -71,9 +71,12 @@
     unsigned long len = data.length;
     const char *c = [data UTF8String];
 
-    NSLog(@"write: %s (length %lu)", c, len);
+    NSInteger r = [outputStream write:(uint8_t const *) c maxLength:len];
+    NSLog(@"write: %s (length %lu) -> %ld", c, len, r);
 
-    [outputStream write:(uint8_t const *) c maxLength:len];
+    if (r != len) {
+        [_delegate connection:self parseError:[outputStream streamError]];
+    }
 }
 
 - (void)login:(NSString *)_username password:(NSString *)_password {
