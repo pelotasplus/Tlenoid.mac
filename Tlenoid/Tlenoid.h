@@ -13,11 +13,20 @@
 
 @interface Tlenoid : NSObject<
     IMServicePlugIn,
-    IMServicePlugInPresenceSupport,
     IMServicePlugInGroupListSupport,
+//        IMServicePlugInGroupListHandlePictureSupport,
+//        IMServicePlugInChatRoomSupport,
+    IMServicePlugInPresenceSupport,
+    IMServicePlugInInstantMessagingSupport,
     TlenConnectionDelegate>
 {
-    id<IMServiceApplication, IMServiceApplicationGroupListSupport> _application;
+    id <
+        IMServiceApplication,
+        IMServiceApplicationGroupListSupport,
+//        IMServiceApplicationChatRoomSupport,
+        IMServiceApplicationInstantMessagingSupport
+    > _application;
+
     NSDictionary *_accountSettings;
     NSString *_username, *_password;
     TlenConnection *_tlenConnection;

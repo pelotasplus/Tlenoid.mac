@@ -12,7 +12,14 @@
 
 // IMServicePlugIn
 
-- (id)initWithServiceApplication:(id <IMServiceApplication, IMServiceApplicationGroupListSupport>)serviceApplication {
+#pragma mark -
+#pragma mark IMServicePlugIn
+
+- (id)initWithServiceApplication:(id <
+    IMServiceApplication,
+    IMServiceApplicationGroupListSupport,
+//    IMServiceApplicationChatRoomSupport,
+    IMServiceApplicationInstantMessagingSupport>)serviceApplication {
     NSLog(@"initWithServiceApplication");
 
     if ((self = [super init])) {
