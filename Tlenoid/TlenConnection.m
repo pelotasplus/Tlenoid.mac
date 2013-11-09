@@ -477,6 +477,7 @@
 
 - (void)logout {
     NSString *s = @"</s>";
+    gotRoster = FALSE;
     [self write:s];
     [self stopPingTimer];
 }
