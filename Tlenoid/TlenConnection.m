@@ -250,10 +250,7 @@
 }
 
 - (void)processMessage {
-    NSLog(@"processMessage: root=%@", root);
-
-    NSXMLNode *type = [[root attributeForName:@"type"] objectValue];
-    NSXMLNode *jid = [[root attributeForName:@"from"] objectValue];
+    NSXMLNode *jid = [root attributeForName:@"from"];
 
     NSString *body;
     for (NSXMLNode *child in [root children]) {
@@ -264,12 +261,9 @@
         }
     }
 
-    if (type && jid && body) {
-        NSLog(@"type %@", type);
-        NSLog(@"from %@", jid);
-        NSLog(@"body %@", body);
-
-        [_delegate connection:self gotMessage:body from:@"pelotas@tlen.pl"];
+    if (jid && body) {
+        NSString *handle = [self stripHandle:[jid stringValue]];
+        [_delegate connection:self gotMessage:body from:handle];
     }
 }
 
