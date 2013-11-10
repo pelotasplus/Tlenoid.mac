@@ -235,9 +235,18 @@
     }
 
     NSString *jid = [f stringValue];
-    jid = [jid stringByReplacingOccurrencesOfString:@"/WebTlen" withString:@""];
+    jid = [self stripHandle:jid];
 
     [_delegate connection:self gotTyping:jid startedTyping:startedTyping];
+}
+
+- (NSString*)stripHandle:(NSString *)handle {
+    NSRange slash = [handle rangeOfString:@"/"];
+    if (slash.location != NSNotFound) {
+        return [handle substringToIndex:slash.location];
+    } else {
+        return handle;
+    }
 }
 
 - (void)processMessage {
