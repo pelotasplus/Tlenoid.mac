@@ -107,8 +107,6 @@
 }
 
 - (void)connection:(TlenConnection *)connection gotRoster:(NSArray *)users {
-    NSLog(@"gotRoster %@", users);
-
     _users = [[NSMutableArray alloc] initWithArray:users];
 
     // permissions
@@ -125,8 +123,6 @@
         handles, IMGroupListHandlesKey,
         permissions, IMGroupListPermissionsKey,
         nil];
-
-    NSLog(@"default group %@", defaultGroup);
 
     NSArray *groups = [[NSArray alloc] initWithObjects:defaultGroup, nil];
 

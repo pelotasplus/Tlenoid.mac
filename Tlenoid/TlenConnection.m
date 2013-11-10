@@ -105,7 +105,6 @@
 }
 
 - (void)pingTimerFired:(id)pingTimerFired {
-    NSLog(@"pingTimerFired");
     NSString *s = @"  \t  ";
     [self write:s];
 }
@@ -205,23 +204,14 @@
 }
 
 - (void)processM {
-    NSLog(@"processM: root=%@", root);
-
     NSXMLNode *f, *tp;
 
     f = [root attributeForName:@"f"];
     tp = [root attributeForName:@"tp"];
 
-    NSLog(@"processM f=%@ tp=%@", f, tp);
-
     if (! f || ! tp) {
         return;
     }
-
-    NSLog(@"processM f=%@ tp=%@", [f objectValue], [tp stringValue]);
-
-    NSLog(@"processM %d", [[tp objectValue] isEqualToString:@"t"]);
-    NSLog(@"processM %d", [[tp stringValue] isEqualTo:@"t"]);
 
     BOOL startedTyping;
 
