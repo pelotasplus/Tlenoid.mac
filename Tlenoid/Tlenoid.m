@@ -38,14 +38,10 @@
 }
 
 - (oneway void)login {
-    NSLog(@"login begin");
-
-//    [_tlenConnection initStream:@"s1._tlenConnection.pl" port:443];
     [_tlenConnection login:_username password:_password];
 }
 
 - (oneway void)logout {
-    NSLog(@"logout");
     [_tlenConnection logout];
 }
 
