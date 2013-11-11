@@ -81,7 +81,7 @@
 
     [self initStream:@"s1.tlen.pl" port:443];
 
-    NSString *s = @"<s v='7'>\n";
+    NSString *s = @"<s v=\"9\" t=\"06000224\">";
     [self write:s];
 
     [self startPingTimer];
@@ -92,7 +92,7 @@
     if (pingTimer != NULL) {
         [self stopPingTimer];
     }
-    pingTimer = [NSTimer scheduledTimerWithTimeInterval:(6.0)
+    pingTimer = [NSTimer scheduledTimerWithTimeInterval:(30.0)
                                                  target:self
                                                selector:@selector(pingTimerFired:)
                                                userInfo:nil
@@ -101,7 +101,8 @@
 }
 
 - (void)pingTimerFired:(id)pingTimerFired {
-    NSString *s = @"  \t  ";
+//    NSString *s = @"  \t  ";
+    NSString *s = [NSString stringWithFormat:@"<m to='%@@tlen.pl' tp='u'/>", username];
     [self write:s];
 }
 
