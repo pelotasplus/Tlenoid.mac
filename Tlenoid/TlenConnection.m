@@ -53,8 +53,6 @@
     [inputStream open];
     [outputStream open];
 
-    NSLog(@"inputStream %@ outputStream %@", inputStream, outputStream);
-
     xmlParser = [[NSXMLParser alloc] initWithStream:inputStream];
     [xmlParser setDelegate:self];
     dispatch_block_t dispatch_block = ^(void) {
@@ -63,8 +61,6 @@
     dispatch_queue_t dispatch_queue = dispatch_queue_create("parser.queue", NULL);
     dispatch_async(dispatch_queue, dispatch_block);
 //    dispatch_release(dispatch_queue);
-
-    NSLog(@"initStream end");
 }
 
 - (void)write:(NSString *)data {
@@ -265,27 +261,18 @@
     NSXMLNode *from = [[root attributeForName:@"from"] objectValue];
     NSXMLNode *type = [[root attributeForName:@"type"] objectValue];
 
-    NSLog(@"type from %@ %@", from, type);
-
     if (type != NULL) {
         show = (id) type;
     }
 
-    NSLog(@"type2 from %@ %@", from, type);
-
     for (NSXMLNode *child in [root children]) {
-        NSLog(@"processing child from %@ %@", from, child);
         if ([child.name isEqualToString:@"show"]) {
             show = [child objectValue];
         } else if ([child.name isEqualToString:@"status"]) {
-            NSLog(@"status pre %@ %@", from, [child objectValue]);
             status = [self urldecode:[child objectValue]];
-            NSLog(@"status after %@ %@", from, status);
 //            status = [child objectValue];
         }
     }
-
-    NSLog(@"show %@", show);
 
     if (status == NULL) status = @"";
     if (show == NULL) show = @"unavailable";
@@ -305,14 +292,10 @@
     // handle
     [dictionary setObject:from forKey:@"jid"];
 
-    NSLog(@"processPresence: dict %@", dictionary);
-
     [_delegate connection:self gotPresence:dictionary];
 }
 
 - (void)processIq {
-    NSLog(@"processIq");
-
     assert([root.name isEqualToString:@"iq"]);
 
     NSXMLNode *type = [root attributeForName:@"type"];
@@ -397,8 +380,6 @@
 }
 
 - (IMHandleAvailability)TlenPresence2IMHandleAvailability:(NSString *)presence {
-    NSLog(@"TlenPresence2IMHandleAvailability %@", presence);
-
     if ([presence isEqualToString:@"available"]) {
         return IMHandleAvailabilityAvailable;
     } else if ([presence isEqualToString:@"chat"]) {

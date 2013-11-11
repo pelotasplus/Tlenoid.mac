@@ -20,7 +20,6 @@
     IMServiceApplicationGroupListSupport,
 //    IMServiceApplicationChatRoomSupport,
     IMServiceApplicationInstantMessagingSupport>)serviceApplication {
-    NSLog(@"initWithServiceApplication");
 
     if ((self = [super init])) {
         _application = serviceApplication;
@@ -43,17 +42,11 @@
 
 //    [_tlenConnection initStream:@"s1._tlenConnection.pl" port:443];
     [_tlenConnection login:_username password:_password];
-
-    NSLog(@"login end");
 }
 
 - (oneway void)logout {
     NSLog(@"logout");
-
     [_tlenConnection logout];
-//    [_tlenConnection destroy];
-
-    NSLog(@"logout end");
 }
 
 // IMServicePlugInPresenceSupport
@@ -135,8 +128,7 @@
 
 - (void)connection:(TlenConnection *)connection gotPresence:(NSDictionary *)presence {
     NSString *jid = [presence valueForKey:@"jid"];
-    NSLog(@"got presence: jid %@", jid);
-    NSLog(@"got presence: presence %@", presence);
+    NSLog(@"got presence: jid %@ presence %@", jid, presence);
     [_application plugInDidUpdateProperties:presence ofHandle:jid];
 }
 
