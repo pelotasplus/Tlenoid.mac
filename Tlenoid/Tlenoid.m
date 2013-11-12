@@ -61,6 +61,12 @@
     [_tlenConnection requestGroupList];
 }
 
+// IMServicePlugInGroupListHandlePictureSupport
+
+- (oneway void)requestPictureForHandle:(NSString *)handle withIdentifier:(NSString *)identifier {
+    [_tlenConnection getAvatar:identifier handle:handle];
+}
+
 // IMServicePlugInInstantMessagingSupport
 
 #pragma mark -
@@ -149,6 +155,14 @@
     } else {
         [_application handleDidStopTyping:jid];
     }
+}
+- (void)connection:(TlenConnection *)connection gotAvatar:(NSData *)avatar identifier:(NSString *)identifier handle:(NSString *)handle {
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+    [dictionary setValue:identifier forKey:IMHandlePropertyPictureIdentifier];
+    NSBitmapImageRep *bitmap = [NSBitmapImageRep imageRepWithData: avatar];
+    NSData *png = [bitmap representationUsingType: NSPNGFileType properties: nil];
+    [dictionary setValue:png forKey:IMHandlePropertyPictureData];
+    [_application plugInDidUpdateProperties:dictionary ofHandle:handle];
 }
 
 @end

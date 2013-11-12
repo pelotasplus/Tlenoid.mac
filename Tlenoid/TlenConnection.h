@@ -39,6 +39,8 @@
 
 - (void)startedTyping:(NSString *)handle;
 - (void)stopedTyping:(NSString *)handle;
+
+- (void)getAvatar:(NSString *)identifier handle:(NSString *)handle;
 @end
 
 @protocol TlenConnectionDelegate
@@ -50,4 +52,5 @@
 - (void)connection:(TlenConnection *)connection messageSent:(IMServicePlugInMessage *)message from:(NSString *)jid;
 - (void)connection:(TlenConnection *)connection parseError:(NSError *)error;
 - (void)connection:(TlenConnection *)connection gotTyping:(NSString *)jid startedTyping:(BOOL)started;
+- (void)connection:(TlenConnection *)connection gotAvatar:(NSData *)avatar identifier:(NSString *)identifier handle:(NSString *)handle;
 @end

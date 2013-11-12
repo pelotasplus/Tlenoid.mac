@@ -254,13 +254,27 @@
     }
 }
 
+- (NSXMLElement *)childNamed:(NSString *)strName node:(NSXMLNode *)node {
+    NSEnumerator *e = [[node children] objectEnumerator];
+
+    NSXMLElement *t;
+    while ((t = [e nextObject])) {
+        if ([[t name] isEqualToString:strName]) {
+            return t;
+        }
+    }
+
+    return nil;
+}
+
 - (void)processPresence {
     assert([root.name isEqualToString:@"presence"]);
 
     NSString *status = @"", *show = @"unavailable";
 
-    NSXMLNode *from = [[root attributeForName:@"from"] objectValue];
+    NSString *from = [[root attributeForName:@"from"] objectValue];
     NSXMLNode *type = [[root attributeForName:@"type"] objectValue];
+    NSString *avatar = nil;
 
     if (type != NULL) {
         show = (id) type;
@@ -271,24 +285,34 @@
             show = [child objectValue];
         } else if ([child.name isEqualToString:@"status"]) {
             status = [self urldecode:[child objectValue]];
-//            status = [child objectValue];
+        } else if ([child.name isEqualToString:@"avatar"]) {
+            NSXMLElement *a = [self childNamed:@"a" node:child];
+            if (a != NULL) {
+                avatar = [[a attributeForName:@"md5"] stringValue];
+            }
         }
     }
 
     if (status == NULL) status = @"";
     if (show == NULL) show = @"unavailable";
 
-    NSLog(@"processPresence: from=%@ status=%@ show=%@", from, status, show);
+    NSLog(@"processPresence: from=%@ status=%@ show=%@ avatar=%@",
+          from, status, show, avatar);
 
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
 
     // IMHandlePropertyStatusMessage
     [dictionary setObject:status forKey:IMHandlePropertyStatusMessage];
 
-
     // IMHandlePropertyAvailability
     IMHandleAvailability availability = [self TlenPresence2IMHandleAvailability:show];
     [dictionary setObject:[NSNumber numberWithInteger:availability] forKey:IMHandlePropertyAvailability];
+
+    // IMHandlePropertyPictureIdentifier
+    if (avatar != nil) {
+        avatar = [NSString stringWithFormat:@"%@", avatar];
+        [dictionary setObject:avatar forKey:IMHandlePropertyPictureIdentifier];
+    }
 
     // handle
     [dictionary setObject:from forKey:@"jid"];
@@ -491,6 +515,20 @@
 - (void)stopedTyping:(NSString *)handle {
     NSString *s = [NSString stringWithFormat:@"<m to='%@' tp='u'/>", handle];
     [self write:s];
+}
+
+- (void)getAvatar:(NSString *)identifier handle:(NSString *)handle {
+    NSString *id = [self stripHandle:identifier];
+    NSString *path = [NSString stringWithFormat:@"/avatar/%@/0/%@", handle, id];
+    NSURL *avatarUrl = [[NSURL alloc] initWithScheme:@"http" host:@"poczta.o2.pl" path:path];
+
+    NSURLRequest *request = [NSURLRequest requestWithURL:avatarUrl];
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               [_delegate connection:self gotAvatar:data identifier:identifier handle:handle];
+                           }
+    ];
 }
 
 @end

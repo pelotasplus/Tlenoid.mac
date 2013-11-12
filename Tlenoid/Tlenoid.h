@@ -14,8 +14,7 @@
 @interface Tlenoid : NSObject<
     IMServicePlugIn,
     IMServicePlugInGroupListSupport,
-//        IMServicePlugInGroupListHandlePictureSupport,
-//        IMServicePlugInChatRoomSupport,
+    IMServicePlugInGroupListHandlePictureSupport,
     IMServicePlugInPresenceSupport,
     IMServicePlugInInstantMessagingSupport,
     TlenConnectionDelegate>
