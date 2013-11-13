@@ -39,8 +39,6 @@
 }
 
 - (void)initStream:(NSString *)hostname port:(UInt32)port {
-    NSLog(@"initStream: hostname %@ port %u", hostname, port);
-
     CFReadStreamRef readStream;
     CFWriteStreamRef writeStream;
     CFStringRef cfHostname = (__bridge CFStringRef) hostname;
@@ -118,7 +116,6 @@
         namespaceURI:(NSString *)namespaceURI
         qualifiedName:(NSString *)qName
         attributes:(NSDictionary *)attributeDict {
-//    NSLog(@"didStartElement: %@, attributeDict: %@", elementName, attributeDict);
 
     NSXMLElement *element = [[NSXMLElement alloc] initWithName:elementName];
     for(id key in attributeDict) {
@@ -150,10 +147,6 @@
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
-//    NSLog(@"foundCharacters: %@", string);
-
-//    assert(currentElement != NULL);
-
     if (currentElement != NULL) {
         NSXMLNode *xmlNode = [NSXMLNode textWithStringValue:string];
         [currentElement addChild:xmlNode];
@@ -161,8 +154,6 @@
 }
 
 - (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
-//    NSLog(@"didEndElement: %@", elementName);
-
     // special case, ending <s> tag
     if ([elementName isEqualToString:@"s"] && currentElement == NULL) {
         [_delegate connection:self loggedOut:TRUE];
@@ -217,7 +208,7 @@
     } else if ([[tp objectValue] isEqualToString:@"u"]) {
         startedTyping = FALSE;
     } else {
-        NSLog(@"unknown tp");
+        NSLog(@"unknown tp: %@", root);
         return;
     }
 
@@ -452,8 +443,6 @@
         s = [NSString stringWithFormat:@"<presence><show>%s</show></presence>", [self IMSessionAvailability2TlenPresence:availability]];
     }
 
-    NSLog(@"setPresence %@", s);
-
     [self write:s];
 }
 
@@ -497,10 +486,7 @@
 }
 
 - (void)sendMessage:(IMServicePlugInMessage *)message toHandle:(NSString *)jid {
-    NSLog(@"sendMessage: %@ jid %@", message, jid);
-
     NSString *msg = [self urlencode:[message.content string]];
-
     NSString *s = [NSString stringWithFormat:@"<message to='%@' type='chat'><body>%@</body></message>", jid, msg];
     [self write:s];
 

@@ -22,7 +22,6 @@
     id <
         IMServiceApplication,
         IMServiceApplicationGroupListSupport,
-//        IMServiceApplicationChatRoomSupport,
         IMServiceApplicationInstantMessagingSupport
     > _application;
 
