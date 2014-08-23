@@ -5,7 +5,7 @@ Tlen Instant Message Service Plug-in for iChat / Messages app
 
 For all old school geeks!
 
-![Sreen shot](http://pelotaspl.us/tlenoid/ss.png)
+![Sreen shot](https://raw.githubusercontent.com/pelotasplus/Tlenoid.mac/master/screenshot.png)
 
 **What works:**
   
@@ -21,4 +21,4 @@ For all old school geeks!
 
 Instructions coming soon. For now you need to be brave and build it yourself!
 
-![coolczesc](https://raw.githubusercontent.com/pelotasplus/Tlenoid.mac/master/screenshot.png)
+![coolczesc](https://raw.githubusercontent.com/pelotasplus/Tlenoid.mac/master/coolczesc.jpeg)
