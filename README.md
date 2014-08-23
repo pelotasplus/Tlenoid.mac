@@ -21,4 +21,4 @@ For all old school geeks!
 
 Instructions coming soon. For now you need to be brave and build it yourself!
 
-![coolczesc](http://pelotaspl.us/tlenoid/coolczesc.jpeg)
+![coolczesc](https://raw.githubusercontent.com/pelotasplus/Tlenoid.mac/master/screenshot.png)
